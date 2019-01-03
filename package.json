@@ -1,0 +1,77 @@
+{
+  "name": "junk",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@types/react-native-svg-charts": "^5.0.1",
+    "@types/react-navigation-material-bottom-tabs": "^0.3.0",
+    "axios": "^0.18.0",
+    "react": "16.6.3",
+    "react-native": "0.57.8",
+    "react-native-background-fetch": "^2.4.5",
+    "react-native-gesture-handler": "^1.0.12",
+    "react-native-keychain": "^3.0.0",
+    "react-native-paper": "^2.4.0",
+    "react-native-push-notification": "^3.1.2",
+    "react-native-svg-charts": "^5.2.0",
+    "react-native-vector-icons": "^6.1.0",
+    "react-navigation": "^3.0.9",
+    "react-navigation-material-bottom-tabs": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/axios-mock-adapter": "^1.10.0",
+    "@types/enzyme": "^3.1.15",
+    "@types/enzyme-adapter-react-16": "^1.0.3",
+    "@types/hoist-non-react-statics": "^3.0.1",
+    "@types/jest": "23.3.10",
+    "@types/react": "16.7.18",
+    "@types/react-native": "0.57.20",
+    "@types/react-native-push-notification": "^3.0.3",
+    "@types/react-native-vector-icons": "^4.6.4",
+    "@types/react-navigation": "^3.0.1",
+    "@types/react-test-renderer": "16.0.3",
+    "axios-mock-adapter": "^1.15.0",
+    "babel-jest": "23.6.0",
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.7.1",
+    "jest": "23.6.0",
+    "jest-fetch-mock": "^2.1.0",
+    "metro-react-native-babel-preset": "0.51.1",
+    "react-dom": "^16.7.0",
+    "react-test-renderer": "16.6.3",
+    "ts-jest": "^23.10.5",
+    "typescript": "3.2.2"
+  },
+  "jest": {
+    "preset": "react-native",
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js",
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.jest.json"
+      }
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "modulePaths": [
+      "<rootDir>"
+    ],
+    "setupFiles": [
+      "./test/setup.js"
+    ]
+  }
+}
