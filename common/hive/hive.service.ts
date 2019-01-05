@@ -3,6 +3,8 @@ import { IHiveSessionResponse } from './hive-interfaces';
 import CutOutCheck from './cut-out-check';
 import { IHiveValueSet, ValueType, Operation, Unit, IHiveNode, INode, NodeType, NodeTypeIdentifiers } from './hive-interfaces'
 import * as Keychain from 'react-native-keychain';
+import AppConfigService, { IConfig } from '../services/app-config.service';
+import { AppConfig } from 'react-native';
 
 interface IServiceState {
   sessionId: string,
@@ -26,6 +28,7 @@ export default class HiveService {
   private _initialised: boolean = false;
   private onDataChangeHandlers: (({}) => void)[] = []; // Callbacks for each client interested in knowing when data has changed
   private loggedInAt?: Date; // The date the session identifier was obtained
+  private configService: AppConfigService;
 
   constructor() {
     this.buildNode = this.buildNode.bind(this);
@@ -34,6 +37,7 @@ export default class HiveService {
     this.init = this.init.bind(this);
     this.readValues = this.readValues.bind(this);
     this.getValues = this.getValues.bind(this);
+    this.configService = new AppConfigService();
   }
 
   public registerChangeHandler(handler : ({}) => void) {
@@ -44,6 +48,7 @@ export default class HiveService {
     }
 
     this.onDataChangeHandlers.push(handler);
+    handler(this.state); // let registered user get current state
   }
 
   public getNodeId(name: string): string {
@@ -140,14 +145,16 @@ export default class HiveService {
     let id: string = undefined as any;
 
     await this.init()
-    id = await this.getNodeId('Thermostat');
+    const config = await this.configService.getSettings();
+    id = await this.getNodeId(config.temperatureSourceDeviceName || 'Thermostat');
+    
     if(!id) {
       throw new Error('No device id found for thermostat');
     }
     let targets = await this.readValues(ValueType.targetTemperature, id, Operation.average, start, end, 15 );
     let actuals = await this.readValues(ValueType.temperature, id, Operation.average, start, end, 15 );
     
-    return new CutOutCheck(targets,actuals);
+    return new CutOutCheck(targets,actuals, config.expectedTemperatureDeltaPerHour || 0.11);
   }
 
   public readValues(

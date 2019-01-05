@@ -8,7 +8,7 @@
 import {IHiveValueSet} from './hive-interfaces';
 
 export default class CutOutCheck {
-  constructor(public target: IHiveValueSet, public actual: IHiveValueSet) {
+  constructor(public target: IHiveValueSet, public actual: IHiveValueSet, public rateChangePerHour: number) {
   }
 
   private _keys: string[] = undefined as any; // Used to cache the times to check
@@ -78,7 +78,7 @@ export default class CutOutCheck {
 
   get hasCutOut() {
     // Returns true if heating is needed and has not increased at expected rate per minute 
-    const expectedGradiantPerMinute = 0.0125;
+    const expectedGradiantPerMinute = this.rateChangePerHour / 60;
     if(!this.isHeating) {
       return false;
     }

@@ -20,7 +20,7 @@ export enum NodeType {
   // Interesting node types
   hub = 'hub',
   thermostat = 'thermostat',
-  plug = 'plug;'
+  plug = 'plug'
 }
 
 export interface IHiveNode {
