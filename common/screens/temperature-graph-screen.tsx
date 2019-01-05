@@ -1,6 +1,6 @@
 /* React native screen to display graph of target vs actual temperatures */
 import * as React from 'react';
-import {ActivityIndicator, StyleSheet, Text, View, Alert } from 'react-native';
+import {ActivityIndicator, StyleSheet, Text, View, Alert, Dimensions } from 'react-native';
 import {withHiveSubscription} from '../hive';
 import {ValueType, Operation, IHiveSessionResponse, IHiveValueSet} from '../hive/hive-interfaces';
 import {IHiveSubscriptionState} from '../hive/withHiveSubscription';
@@ -29,6 +29,8 @@ class TemperatureGraphScreen extends React.Component<ITemperatureGraphProps, ITe
     this.state = {
         temperaturesLoaded: undefined
     }
+
+    this.refreshOnOrientationChange = this.refreshOnOrientationChange.bind(this);
   }
 
   static navigationOptions = {
@@ -36,9 +38,18 @@ class TemperatureGraphScreen extends React.Component<ITemperatureGraphProps, ITe
     tabBarIcon: tabBarIcon('ios-pulse')
   };
 
-
+  
+  componentWillUnmount() {
+    Dimensions.removeEventListener('change', this.refreshOnOrientationChange);
+  }
+  
   componentDidMount() {
+    Dimensions.addEventListener('change', this.refreshOnOrientationChange)
     this.loadData();
+  }
+
+  refreshOnOrientationChange() {
+    this.forceUpdate();
   }
 
   componentDidUpdate() {
@@ -54,7 +65,9 @@ class TemperatureGraphScreen extends React.Component<ITemperatureGraphProps, ITe
   public render() {
     const {temperaturesLoaded} = this.state;
     const consolidatedData = this.buildConsolidatedData();
-
+    let width = Dimensions.get('window').width;
+    let height = Dimensions.get('window').height;
+  
     return (
       <HeaderPage title="Temperature Graph">
         {
@@ -64,7 +77,7 @@ class TemperatureGraphScreen extends React.Component<ITemperatureGraphProps, ITe
         }
         {            
           temperaturesLoaded === true && <View style={styles.graphContainer}>
-            <HouseTempGraph consolidatedData={consolidatedData} graphProps={styles.graph}/>
+            <HouseTempGraph consolidatedData={consolidatedData} graphProps={ {height: height - 100, width: width - 30}}/>
             <CenteredView>
             <Button mode="outlined" onPress={() => this.reLoad()}>Reload</Button>
             </CenteredView>
@@ -165,8 +178,6 @@ const styles = StyleSheet.create({
       flex: 0,
       flexDirection: "row",
       alignItems: 'stretch',
-      height: 180,
-      width: '100%',
       padding: 0
     }
 });
